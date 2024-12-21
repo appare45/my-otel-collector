@@ -12,6 +12,10 @@ receivers:
 processors:
     batch:
         timeout: 1m
+    resourcedetection/system:
+        detectors: ["system"]
+        system:
+            hostname_sources: ["os"]
 
 exporters:
     otlp/mackerel:
