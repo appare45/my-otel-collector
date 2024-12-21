@@ -1,13 +1,18 @@
-name: Go Build
+name: Build Collector
 
 on: [push]
 
-env:
-    GOBIN: /opt/gobin
-
 jobs:
     build:
-        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                os:
+                    - name: macos-14
+                      GOBIN: /Users/runner/gobin
+                    - name: ubuntu-24.04
+                      GOBIN: /opt/gobin
+        runs-on: ${{matrix.os.name}}
         steps:
             - uses: actions/checkout@v4
             - name: Setup Go
@@ -18,9 +23,9 @@ jobs:
             - name: Cache Builder
               uses: actions/cache@v4
               with:
-                  path: ${{env.GOBIN}}
+                  path: ${{matrix.os.GOBIN}}
                   key: ${{runner.os}}-${{runner.arch}}-gobin
             - name: Install Builder
               run: go install go.opentelemetry.io/collector/cmd/builder@latest
             - name: Build Collector
-              run: $GOBIN/builder --config=builder-config.yaml
+              run: ${{matrix.os.GOBIN}}/builder --config=builder-config.yaml
