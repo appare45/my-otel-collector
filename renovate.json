@@ -1,0 +1,10 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended"],
+    "bumpVersion": "minor",
+    "ocb": {
+        "fileMatch": ["builder-config.yaml"]
+    },
+    "github-actions": {},
+    "timezone": "Asia/Tokyo"
+}
