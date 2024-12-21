@@ -1,5 +1,6 @@
 dist:
-    module: github.com/appare45/my-otel-collecotr
+    module: github.com/appare45/my-otel-collector
+    output_path: ./output
 exporters:
     - gomod: go.opentelemetry.io/collector/exporter/otlpexporter v0.116.0
 
