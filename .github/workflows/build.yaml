@@ -1,0 +1,26 @@
+name: Go Build
+
+on: [push]
+
+env:
+    GOBIN: /opt/gobin
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: 1.22
+                  cache-dependency-path: builder-config.yaml
+            - name: Cache Builder
+              uses: actions/cache@v4
+              with:
+                  path: ${{env.GOBIN}}
+                  key: ${{runner.os}}-${{runner.arch}}-gobin
+            - name: Install Builder
+              run: go install go.opentelemetry.io/collector/cmd/builder@latest
+            - name: Build Collector
+              run: $GOBIN/builder --config=builder-config.yaml
