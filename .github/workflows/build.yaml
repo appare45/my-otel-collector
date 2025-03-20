@@ -29,12 +29,14 @@ jobs:
       - name: Install Builder
         run: go install go.opentelemetry.io/collector/cmd/builder@latest
       - name: Build Collector
-        run: $GOBIN/builder --config=builder-config.yaml && mv ./output/my-otel-collector ./output/my-otel-collector-${{matrix.os}}
+        run: $GOBIN/builder --config=builder-config.yaml
+      - name: Compress artifacts
+        run: mkdir release && cp ./output/otel-collector release/otel-collector && cp config.yaml release/ && tar -czvf otel-collector-${{matrix.os}}.tar.gz release
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: temp-${{matrix.os}}-${{github.run_id}}
-          path: ./output/my-otel-collector-${{matrix.os}}
+          path: otel-collector-${{matrix.os}}.tar.gz
           retention-days: 1
   release:
     runs-on: ubuntu-latest
@@ -54,4 +56,4 @@ jobs:
           fail_on_unmatched_files: true
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
           files: |
-            my-otel-collector-*
+            otel-collector-*
