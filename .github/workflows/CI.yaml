@@ -2,9 +2,6 @@ name: CI Build Collector
 
 on:
   push:
-    branches:
-      - "*"
-      - "!main"
 
 jobs:
   build:
