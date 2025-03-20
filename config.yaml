@@ -1,32 +1,35 @@
 receivers:
-    hostmetrics:
-        scrapers:
-            cpu:
-            disk:
-            filesystem:
-            load:
-            memory:
-            network:
-            paging:
+  hostmetrics:
+    scrapers:
+      cpu:
+      disk:
+      filesystem:
+      load:
+      memory:
+      network:
+      paging:
 
 processors:
-    batch:
-        timeout: 1m
-    resourcedetection/system:
-        detectors: ["system"]
-        system:
-            hostname_sources: ["os"]
-
+  batch:
+    timeout: 1m
+  resourcedetection/system:
+    detectors: ["system"]
+    system:
+      hostname_sources: ["os"]
+  attributes:
+    actions:
+      - key: service.name
+      - value: hostmetrics
 exporters:
-    otlp/mackerel:
-        endpoint: otlp.mackerelio.com:4317
-        compression: gzip
-        headers:
-            Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+  otlp/mackerel:
+    endpoint: otlp.mackerelio.com:4317
+    compression: gzip
+    headers:
+      Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
 
 service:
-    pipelines:
-        metrics:
-            receivers: [hostmetrics]
-            processors: [batch]
-            exporters: [otlp/mackerel]
+  pipelines:
+    metrics:
+      receivers: [hostmetrics]
+      processors: [batch]
+      exporters: [otlp/mackerel]
