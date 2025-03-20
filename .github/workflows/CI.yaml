@@ -1,22 +1,24 @@
 name: CI Build Collector
 
 on:
-    push:
-        branches:
-            - "*"
-            - "!main"
+  push:
+    branches:
+      - "*"
+      - "!main"
 
 jobs:
-    build:
-        runs-on: ubuntu-24.04
-        steps:
-            - uses: actions/checkout@v4
-            - name: Setup Go
-              uses: actions/setup-go@v5
-              with:
-                  go-version: 1.22
-                  cache-dependency-path: builder-config.yaml
-            - name: Install Builder
-              run: go install go.opentelemetry.io/collector/cmd/builder@latest
-            - name: Build Collector
-              run: builder --config=builder-config.yaml
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23
+          cache-dependency-path: builder-config.yaml
+      - name: Install Builder
+        run: go install go.opentelemetry.io/collector/cmd/builder@latest
+      - name: Build Collector
+        run: builder --config=builder-config.yaml
+      - name: Test collector
+        run: output/otel-collector validate --config config.yaml
